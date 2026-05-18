@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 
-import { copyToClipboard } from "@mariozechner/pi-coding-agent";
-import { type AutocompleteItem, Text } from "@mariozechner/pi-tui";
+import { copyToClipboard } from "@earendil-works/pi-coding-agent";
+import { type AutocompleteItem, Text } from "@earendil-works/pi-tui";
 
 import { type ReviewDiff, type ReviewDiffMode, readGitDiff } from "./git.js";
 import { getSelectedPreviewLine, selectPreviewLineForComment, syncPreviewSelection } from "./model.js";

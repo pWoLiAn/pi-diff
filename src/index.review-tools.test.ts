@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import diffRendererExtension from "./index.js";
 
-vi.mock("@mariozechner/pi-coding-agent", () => ({
+vi.mock("@earendil-works/pi-coding-agent", () => ({
 	createWriteTool: () => ({
 		name: "write",
 		execute: async () => ({ content: [{ type: "text", text: "written" }] }),
@@ -19,7 +19,7 @@ vi.mock("@mariozechner/pi-coding-agent", () => ({
 	getMarkdownTheme: () => ({ mocked: true }),
 }));
 
-vi.mock("@mariozechner/pi-tui", () => ({
+vi.mock("@earendil-works/pi-tui", () => ({
 	Text: class Text {
 		value = "";
 		constructor(text = "") {

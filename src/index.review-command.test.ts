@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
 	copyToClipboard: vi.fn(),
 }));
 
-vi.mock("@mariozechner/pi-coding-agent", () => ({
+vi.mock("@earendil-works/pi-coding-agent", () => ({
 	copyToClipboard: mocks.copyToClipboard,
 	createWriteTool: () => ({
 		name: "write",
@@ -24,7 +24,7 @@ vi.mock("@mariozechner/pi-coding-agent", () => ({
 	getMarkdownTheme: () => ({ mocked: true }),
 }));
 
-vi.mock("@mariozechner/pi-tui", () => ({
+vi.mock("@earendil-works/pi-tui", () => ({
 	Text: class Text {
 		value = "";
 		constructor(text = "") {

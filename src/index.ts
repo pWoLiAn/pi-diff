@@ -1353,8 +1353,8 @@ export default async function diffRendererExtension(pi: any): Promise<void> {
 
 	let createWriteTool: any, createEditTool: any, getMarkdownTheme: any, TextComponent: any, MarkdownComponent: any;
 	try {
-		const sdk = await import("@mariozechner/pi-coding-agent");
-		const tui = await import("@mariozechner/pi-tui");
+		const sdk = await import("@earendil-works/pi-coding-agent");
+		const tui = await import("@earendil-works/pi-tui");
 		createWriteTool = sdk.createWriteTool;
 		createEditTool = sdk.createEditTool;
 		getMarkdownTheme = sdk.getMarkdownTheme;

@@ -36,7 +36,7 @@ function wrapTextWithTabs(text: string, width: number): string[] {
 	return parts;
 }
 
-vi.mock("@mariozechner/pi-tui", () => ({
+vi.mock("@earendil-works/pi-tui", () => ({
 	Key: {
 		escape: "escape",
 		enter: "enter",
