@@ -1860,6 +1860,7 @@ Examples:
 		},
 
 		renderCall(args: any, theme: any, ctx: any) {
+			resolveSharedDiffColors(theme);
 			const fp = args?.path ?? args?.file_path ?? "";
 			const operations = getEditOperations(args);
 			const text = ctx.lastComponent ?? new TextComponent("", 0, 0);
@@ -1921,6 +1922,7 @@ Examples:
 		},
 
 		renderResult(result: any, _opt: any, theme: any, ctx: any) {
+			resolveSharedDiffColors(theme);
 			const text = ctx.lastComponent ?? new TextComponent("", 0, 0);
 			if (ctx.isError) {
 				const e =
