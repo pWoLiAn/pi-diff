@@ -772,13 +772,14 @@ function fillEditBg(text: string, theme?: any): string {
 	}
 	const rst = bg === BG_DEFAULT ? "\x1b[0m" : `\x1b[0m${bg}`;
 	const w = termW();
-	return text.split("\n").map((line) => {
-		// Re-apply bg after any reset within the line
+	const padLine = `${bg}${" ".repeat(w)}${rst}`;
+	const body = text.split("\n").map((line) => {
 		const patched = line.replace(/\x1b\[0m/g, rst);
 		const vis = patched.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "").length;
 		const pad = Math.max(0, w - vis);
 		return `${bg}${patched}${" ".repeat(pad)}${rst}`;
 	}).join("\n");
+	return `${padLine}\n${body}\n${padLine}`;
 }
 
 /**
