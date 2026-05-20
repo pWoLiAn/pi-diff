@@ -1730,6 +1730,7 @@ Examples:
 		},
 
 		renderResult(result: any, _opt: any, theme: any, ctx: any) {
+			resolveSharedDiffColors(theme);
 			const text = ctx.lastComponent ?? new TextComponent("", 0, 0);
 			if (ctx.isError) {
 				const e =
@@ -1746,21 +1747,21 @@ Examples:
 				const key = `wd:${sharedThemeCacheKey(theme)}:${w}:${d.summary}:${d.diff?.lines?.length ?? 0}:${d.language ?? ""}`;
 				if (ctx.state._wdk !== key) {
 					ctx.state._wdk = key;
-					ctx.state._wdt = `  ${d.summary}\n${theme.fg("muted", "  rendering diff…")}`;
+					ctx.state._wdt = fillEditBg(`  ${d.summary}`, theme) + `\n${theme.fg("muted", "  rendering diff…")}`;
 					const dc = resolveSharedDiffColors(theme);
 					renderSharedSplit(d.diff, d.language, MAX_RENDER_LINES, dc, w)
 						.then((rendered: string) => {
 							if (ctx.state._wdk !== key) return;
-							ctx.state._wdt = `  ${d.summary}\n${rendered}`;
+							ctx.state._wdt = fillEditBg(`  ${d.summary}`, theme) + `\n${rendered}`;
 							ctx.invalidate();
 						})
 						.catch(() => {
 							if (ctx.state._wdk !== key) return;
-							ctx.state._wdt = `  ${d.summary}`;
+							ctx.state._wdt = fillEditBg(`  ${d.summary}`, theme);
 							ctx.invalidate();
 						});
 				}
-				text.setText(ctx.state._wdt ?? `  ${d.summary}`);
+				text.setText(ctx.state._wdt ?? fillEditBg(`  ${d.summary}`, theme));
 				return text;
 			}
 			if (d?._type === "noChange") {
