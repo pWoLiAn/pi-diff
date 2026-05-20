@@ -762,6 +762,15 @@ function rule(w: number): string {
 	return `${BG_BASE}${FG_RULE}${"─".repeat(w)}${RST}`;
 }
 
+function fillEditBg(text: string): string {
+	const w = termW();
+	return text.split("\n").map((line) => {
+		const vis = line.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "").length;
+		const pad = Math.max(0, w - vis);
+		return `${BG_BASE}${line}${" ".repeat(pad)}${RST}`;
+	}).join("\n");
+}
+
 /**
  * Decide whether split view is readable for the given terminal width.
  * Prefers split view — side-by-side is always easier to scan.
@@ -1857,7 +1866,7 @@ Examples:
 			const hdr = `${theme.fg("toolTitle", theme.bold("edit"))} ${theme.fg("accent", sp(fp))}`;
 
 			if (!(ctx.argsComplete && operations.length > 0)) {
-				text.setText(hdr);
+				text.setText(fillEditBg(hdr));
 				return text;
 			}
 
@@ -1907,7 +1916,7 @@ Examples:
 				}
 			}
 
-			text.setText(ctx.state._pt ?? hdr);
+			text.setText(fillEditBg(ctx.state._pt ?? hdr));
 			return text;
 		},
 
@@ -1925,18 +1934,13 @@ Examples:
 			if (result.details?._type === "editInfo") {
 				const { summary: s, editLine } = result.details;
 				const loc = editLine > 0 ? ` ${theme.fg("muted", `at line ${editLine}`)}` : "";
-				const content = `  ${s}${loc}`;
-				const vis = content.replace(ANSI_RE, "").length;
-				const pad = Math.max(0, termW() - vis);
-				text.setText(`${content}${" ".repeat(pad)}`);
+				text.setText(fillEditBg(`  ${s}${loc}`));
 				return text;
 			}
 			if (result.details?._type === "multiEditInfo") {
 				const { summary: s, editCount, diffLineCount } = result.details;
-				const content = `  ${editCount} edits ${s}${typeof diffLineCount === "number" ? ` ${theme.fg("muted", `(${diffLineCount} diff lines)`)}` : ""}`;
-				const vis = content.replace(ANSI_RE, "").length;
-				const pad = Math.max(0, termW() - vis);
-				text.setText(`${content}${" ".repeat(pad)}`);
+				const info = `  ${editCount} edits ${s}${typeof diffLineCount === "number" ? ` ${theme.fg("muted", `(${diffLineCount} diff lines)`)}` : ""}`;
+				text.setText(fillEditBg(info));
 				return text;
 			}
 			text.setText(`  ${theme.fg("dim", String(result?.content?.[0]?.text ?? "edited").slice(0, 120))}`);
