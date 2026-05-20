@@ -1873,12 +1873,12 @@ Examples:
 					renderSharedSplit(diff, lg, MAX_PREVIEW_LINES, dc, termW())
 						.then((rendered) => {
 							if (ctx.state._pk !== pk) return;
-							ctx.state._pt = `${hdr}\n${summarize(diff.added, diff.removed)}\n${rendered}`;
+							ctx.state._pt = `${hdr}\n${rendered}`;
 							ctx.invalidate();
 						})
 						.catch(() => {
 							if (ctx.state._pk !== pk) return;
-							ctx.state._pt = `${hdr}  ${summarize(diff.added, diff.removed)}`;
+							ctx.state._pt = `${hdr}`;
 							ctx.invalidate();
 						});
 				} else {
@@ -1896,12 +1896,12 @@ Examples:
 							if (ctx.state._pk !== pk) return;
 							const remainder = operations.length - maxShown;
 							const suffix = remainder > 0 ? `\n${theme.fg("muted", `… ${remainder} more edit blocks`)}` : "";
-							ctx.state._pt = `${hdr}\n${operations.length} edits ${summary}\n\n${sections.join("\n\n")}${suffix}`;
+							ctx.state._pt = `${hdr}\n\n${sections.join("\n\n")}${suffix}`;
 							ctx.invalidate();
 						})
 						.catch(() => {
 							if (ctx.state._pk !== pk) return;
-							ctx.state._pt = `${hdr}  ${operations.length} edits ${summary}`;
+							ctx.state._pt = `${hdr}`;
 							ctx.invalidate();
 						});
 				}
