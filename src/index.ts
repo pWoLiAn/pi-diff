@@ -773,9 +773,11 @@ function fillEditBg(text: string, theme?: any): string {
 	const rst = bg === BG_DEFAULT ? "\x1b[0m" : `\x1b[0m${bg}`;
 	const w = termW();
 	return text.split("\n").map((line) => {
-		const vis = line.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "").length;
+		// Re-apply bg after any reset within the line
+		const patched = line.replace(/\x1b\[0m/g, rst);
+		const vis = patched.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "").length;
 		const pad = Math.max(0, w - vis);
-		return `${bg}${line}${" ".repeat(pad)}${rst}`;
+		return `${bg}${patched}${" ".repeat(pad)}${rst}`;
 	}).join("\n");
 }
 
