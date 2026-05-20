@@ -1874,7 +1874,7 @@ Examples:
 			const fp = args?.path ?? args?.file_path ?? "";
 			const operations = getEditOperations(args);
 			const text = ctx.lastComponent ?? new TextComponent("", 0, 0);
-			const hdr = `${theme.fg("toolTitle", theme.bold("edit"))} ${theme.fg("accent", sp(fp))}`;
+			const hdr = ` ${theme.fg("toolTitle", theme.bold("edit"))} ${theme.fg("accent", sp(fp))}`;
 
 			if (!(ctx.argsComplete && operations.length > 0)) {
 				text.setText(fillEditBg(hdr, theme));
