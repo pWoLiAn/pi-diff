@@ -762,12 +762,20 @@ function rule(w: number): string {
 	return `${BG_BASE}${FG_RULE}${"─".repeat(w)}${RST}`;
 }
 
-function fillEditBg(text: string): string {
+function fillEditBg(text: string, theme?: any): string {
+	let bg = BG_BASE;
+	if (bg === BG_DEFAULT && theme?.getBgAnsi) {
+		try {
+			const bgAnsi = theme.getBgAnsi("toolSuccessBg") || theme.getBgAnsi("toolBg") || theme.getBgAnsi("background");
+			if (bgAnsi) bg = bgAnsi;
+		} catch { /* ignore */ }
+	}
+	const rst = bg === BG_DEFAULT ? "\x1b[0m" : `\x1b[0m${bg}`;
 	const w = termW();
 	return text.split("\n").map((line) => {
 		const vis = line.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "").length;
 		const pad = Math.max(0, w - vis);
-		return `${BG_BASE}${line}${" ".repeat(pad)}${RST}`;
+		return `${bg}${line}${" ".repeat(pad)}${rst}`;
 	}).join("\n");
 }
 
@@ -1867,7 +1875,7 @@ Examples:
 			const hdr = `${theme.fg("toolTitle", theme.bold("edit"))} ${theme.fg("accent", sp(fp))}`;
 
 			if (!(ctx.argsComplete && operations.length > 0)) {
-				text.setText(fillEditBg(hdr));
+				text.setText(fillEditBg(hdr, theme));
 				return text;
 			}
 
@@ -1917,7 +1925,7 @@ Examples:
 				}
 			}
 
-			text.setText(fillEditBg(ctx.state._pt ?? hdr));
+			text.setText(fillEditBg(ctx.state._pt ?? hdr, theme));
 			return text;
 		},
 
@@ -1936,13 +1944,13 @@ Examples:
 			if (result.details?._type === "editInfo") {
 				const { summary: s, editLine } = result.details;
 				const loc = editLine > 0 ? ` ${theme.fg("muted", `at line ${editLine}`)}` : "";
-				text.setText(fillEditBg(`  ${s}${loc}`));
+				text.setText(fillEditBg(`  ${s}${loc}`, theme));
 				return text;
 			}
 			if (result.details?._type === "multiEditInfo") {
 				const { summary: s, editCount, diffLineCount } = result.details;
 				const info = `  ${editCount} edits ${s}${typeof diffLineCount === "number" ? ` ${theme.fg("muted", `(${diffLineCount} diff lines)`)}` : ""}`;
-				text.setText(fillEditBg(info));
+				text.setText(fillEditBg(info, theme));
 				return text;
 			}
 			text.setText(`  ${theme.fg("dim", String(result?.content?.[0]?.text ?? "edited").slice(0, 120))}`);
